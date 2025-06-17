@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор | Насиров Н.А.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@300;500;700&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+        :root {
+            --primary-bg: #1e293b;
+            --display-bg: #f1f5f9;
+            --display-text: #3b82f6;
+            --button-bg: #334155;
+            --button-hover: #3b82f6;
+            --operator-bg: #ea580c;
+            --equals-bg: #16a34a;
+            --clear-bg: #dc2626;
+            --special-bg: #7c3aed;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3a8a, #1e40af);
+            color: #e2e8f0;
+            transition: background 0.5s ease;
+        }
+
+        .calculator {
+            width: 340px;
+            padding: 25px;
+            border-radius: 20px;
+            background: rgba(15, 23, 42, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #display {
+            width: calc(100% - 24px);
+            padding: 20px 12px;
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: right;
+            border-radius: 12px;
+            border: none;
+            color: var(--display-text);
+            background: var(--display-bg);
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 500;
+            border: none;
+            border-radius: 10px;
+            background: var(--button-bg);
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .operator {
+            background: var(--operator-bg);
+        }
+
+        .operator:hover {
+            background: #c2410c;
+        }
+
+        .equals {
+            background: var(--equals-bg);
+        }
+
+        .equals:hover {
+            background: #15803d;
+        }
+
+        .clear {
+            background: var(--clear-bg);
+        }
+
+        .clear:hover {
+            background: #b91c1c;
+        }
+
+        .special {
+            background: var(--special-bg);
+        }
+
+        .special:hover {
+            background: #6d28d9;
+        }
+
+        .theme-btn {
+            background: #9333ea;
+        }
+
+        .theme-btn:hover {
+            background: #7e22ce;
+        }
+
+        .control-panel {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .control-btn {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        .dropdown {
+            margin: 15px 0;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: var(--button-bg);
+            color: #e2e8f0;
+            font-family: 'Exo 2', sans-serif;
+            cursor: pointer;
+        }
+
+        details {
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 8px;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 500;
+            outline: none;
+        }
+
+        .purpose {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 300;
+            text-align: center;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+        
+        <div class="control-panel">
+            <button class="control-btn theme-btn" onclick="changeDisplayColor()">
+                <i class="fas fa-palette"></i> Цвет дисплея
+            </button>
+            <button class="control-btn theme-btn" onclick="changeTheme()">
+                <i class="fas fa-moon"></i> Тема
+            </button>
+        </div>
+
+        <div class="buttons">
+            <button onclick="clearDisplay()" class="clear">C</button>
+            <button onclick="backspace()"><i class="fas fa-backspace"></i></button>
+            <button onclick="calculatePercentage()">%</button>
+            <button onclick="calculateSquareRoot()">√</button>
+            <button onclick="calculateFactorial()">x!</button>
+            
+            <button onclick="addThreeZeros()">000</button>
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('/')" class="operator">/</button>
+            
+            <button onclick="changeSign()">+/-</button>
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('*')" class="operator">×</button>
+            
+            <button onclick="squareNumber()">x²</button>
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('-')" class="operator">-</button>
+            
+            <button onclick="nasirSpecial()">N!</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="calculate()" class="equals">=</button>
+            <button onclick="appendToDisplay('+')" class="operator">+</button>
+        </div>
+
+        <div class="dropdown">
+            <select id="memory" onchange="handleMemoryChange()">
+                <option value="">Операции с памятью</option>
+                <option value="add">M+ (Добавить к памяти)</option>
+                <option value="subtract">M- (Вычесть из памяти)</option>
+                <option value="recall">MR (Вспомнить)</option>
+                <option value="clear">MC (Очистить память)</option>
+            </select>
+        </div>
+
+        <details>
+            <summary>Информация об авторе</summary>
+            <p>Автор: Насиров Н. А.</p>
+            <p>Группа: ИПО-21.23</p>
+        </details>
+
+        <div class="purpose">
+            <p>Цель ЛР: <span class="highlight">знакомство</span> с основами веб-технологий, 
+            изучение <span class="highlight">HTML</span> и <span class="highlight">CSS</span> 
+            для создания интерактивных интерфейсов.</p>
+        </div>
+
+        <a href="https://github.com/Nurlan0211/works" class="control-btn special" target="_blank" style="text-decoration: none; text-align: center;">
+            <i class="fab fa-github"></i> Мой GitHub
+        </a>
+    </div>
+
+    <div class="footer">ЛР1 выполнена Насиров Н.А.</div>
+
+    <script>
+        let memory = 0;
+        let accumulatedValue = 0;
+        let lastOperation = null;
+        const displayColors = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6'];
+        let currentDisplayColor = 0;
+        const themes = [
+            { bg: 'linear-gradient(135deg, #1e3a8a, #1e40af)', button: '#334155' },
+            { bg: 'linear-gradient(135deg, #831843, #9d174d)', button: '#4c1d95' },
+            { bg: 'linear-gradient(135deg, #064e3b, #065f46)', button: '#064e3b' },
+            { bg: 'linear-gradient(135deg, #78350f, #92400e)', button: '#78350f' }
+        ];
+        let currentTheme = 0;
+
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+        
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+        
+        function calculate() {
+            try {
+                const result = eval(document.getElementById('display').value);
+                document.getElementById('display').value = result;
+                accumulatedValue = result;
+                lastOperation = null;
+            } catch (error) {
+                document.getElementById('display').value = 'Ошибка';
+            }
+        }
+        
+        function changeSign() {
+            const display = document.getElementById('display');
+            if (display.value.charAt(0) === '-') {
+                display.value = display.value.substring(1);
+            } else if (display.value !== '') {
+                display.value = '-' + display.value;
+            }
+        }
+        
+        function calculatePercentage() {
+            const display = document.getElementById('display');
+            try {
+                display.value = eval(display.value) / 100;
+            } catch (error) {
+                display.value = 'Ошибка';
+            }
+        }
+        
+        function backspace() {
+            const display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
+        }
+        
+        function changeTheme() {
+            currentTheme = (currentTheme + 1) % themes.length;
+            document.body.style.background = themes[currentTheme].bg;
+            document.documentElement.style.setProperty('--button-bg', themes[currentTheme].button);
+        }
+        
+        function calculateSquareRoot() {
+            const display = document.getElementById('display');
+            try {
+                display.value = Math.sqrt(eval(display.value));
+            } catch (error) {
+                display.value = 'Ошибка';
+            }
+        }
+        
+        function squareNumber() {
+            const display = document.getElementById('display');
+            try {
+                display.value = Math.pow(eval(display.value), 2);
+            } catch (error) {
+                display.value = 'Ошибка';
+            }
+        }
+        
+        function calculateFactorial() {
+            const display = document.getElementById('display');
+            try {
+                let num = parseInt(eval(display.value));
+                if (num < 0) {
+                    display.value = 'Ошибка';
+                    return;
+                }
+                let result = 1;
+                for (let i = 2; i <= num; i++) {
+                    result *= i;
+                }
+                display.value = result;
+            } catch (error) {
+                display.value = 'Ошибка';
+            }
+        }
+        
+        function addThreeZeros() {
+            document.getElementById('display').value += '000';
+        }
+        
+        function handleMemoryChange() {
+            const select = document.getElementById('memory');
+            const value = select.value;
+            const display = document.getElementById('display');
+            
+            try {
+                const currentValue = display.value ? eval(display.value) : 0;
+                
+                switch(value) {
+                    case 'add':
+                        memory += currentValue;
+                        break;
+                    case 'subtract':
+                        memory -= currentValue;
+                        break;
+                    case 'recall':
+                        display.value = memory;
+                        break;
+                    case 'clear':
+                        memory = 0;
+                        break;
+                }
+            } catch (error) {
+                display.value = 'Ошибка';
+            }
+            
+            select.value = '';
+        }
+        
+        function changeDisplayColor() {
+            currentDisplayColor = (currentDisplayColor + 1) % displayColors.length;
+            document.documentElement.style.setProperty('--display-text', displayColors[currentDisplayColor]);
+        }
+        
+        function nasirSpecial() {
+            const display = document.getElementById('display');
+            try {
+                let num = parseFloat(eval(display.value));
+                // Индивидуальная операция: x * π + e
+                display.value = (num * Math.PI + Math.E).toFixed(6);
+            } catch (error) {
+                display.value = 'Ошибка';
+            }
+        }
+    </script>
+</body>
+</html>
